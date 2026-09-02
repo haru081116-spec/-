@@ -38,9 +38,9 @@ input{width:100%;accent-color:#fff}
 </div>
 <script>
 const names={
- tiger:'sounds/tiger.mp3',magic:'sounds/magic.mp3',picon:'sounds/picon.mp3',
- shock:'sounds/shock.mp3',phone:'sounds/phone.mp3',siren:'sounds/siren.mp3',
- police:'sounds/police.mp3'
+ tiger:'tiger.mp3',magic:'magic.mp3',picon:'picon.mp3',
+ shock:'shock.mp3',phone:'phone.mp3',siren:'siren.mp3',
+ police:'police.mp3'
 };
 const sounds={};
 for(const [k,u] of Object.entries(names)){const a=new Audio(u);a.preload='auto';sounds[k]=a}

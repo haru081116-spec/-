@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>効果音ボード</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif;min-height:100vh}
+header{padding:18px 16px 10px;text-align:center}
+h1{margin:0;font-size:28px}.sub{color:#aaa;margin-top:5px;font-size:13px}
+.board{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:14px;max-width:700px;margin:auto}
+button{border:0;border-radius:18px;min-height:125px;background:#242424;color:white;font-size:23px;font-weight:700;box-shadow:0 5px 0 #050505;touch-action:manipulation}
+button:active{transform:translateY(4px);box-shadow:0 1px 0 #050505}
+.emoji{display:block;font-size:45px;margin-bottom:8px}.small{font-size:13px;color:#aaa;display:block;margin-top:5px;font-weight:500}
+.controls{max-width:700px;margin:0 auto;padding:0 14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stop{background:#8b1e1e}.vol{background:#242424;min-height:70px;font-size:16px}
+input{width:100%;accent-color:#fff}
+#status{text-align:center;color:#bbb;font-size:13px;min-height:20px;padding:0 10px 12px}
+@media(min-width:600px){.board{grid-template-columns:repeat(4,1fr)}button{min-height:145px}}
+</style>
+</head>
+<body>
+<header><h1>🎬 効果音ボード</h1><div class="sub">タップしてすぐ再生</div></header>
+<div id="status">準備完了</div>
+<main class="board">
+<button onclick="play('tiger')"><span class="emoji">🐯</span>虎の鳴き声<span class="small">ライオン音</span></button>
+<button onclick="play('magic')"><span class="emoji">✨</span>魔法</button>
+<button onclick="play('picon')"><span class="emoji">🔔</span>ピコン！</button>
+<button onclick="play('shock')"><span class="emoji">😱</span>ガーン！</button>
+<button onclick="play('phone')"><span class="emoji">📱</span>スマホ通知<span class="small">バイブレーション</span></button>
+<button onclick="play('siren')"><span class="emoji">🚨</span>警報</button>
+<button onclick="play('police')"><span class="emoji">🚓</span>警察サイレン</button>
+</main>
+<div class="controls">
+<button class="stop" onclick="stopAll()">⏹️ 全停止</button>
+<div class="vol"><label>🔊 音量 <span id="v">100</span>%</label><input id="volume" type="range" min="0" max="100" value="100" oninput="setVolume(this.value)"></div>
+</div>
+<script>
+const names={
+ tiger:'sounds/tiger.mp3',magic:'sounds/magic.mp3',picon:'sounds/picon.mp3',
+ shock:'sounds/shock.mp3',phone:'sounds/phone.mp3',siren:'sounds/siren.mp3',
+ police:'sounds/police.mp3'
+};
+const sounds={};
+for(const [k,u] of Object.entries(names)){const a=new Audio(u);a.preload='auto';sounds[k]=a}
+let volume=1;
+function play(k){
+  const a=sounds[k];
+  if(!a)return;
+  a.currentTime=0;a.volume=volume;
+  a.play().catch(()=>{});
+  document.getElementById('status').textContent='▶ '+document.querySelector(`button[onclick="play('${k}')"]`).innerText.split('\n')[0];
+}
+function stopAll(){Object.values(sounds).forEach(a=>{a.pause();a.currentTime=0});document.getElementById('status').textContent='⏹ 停止しました'}
+function setVolume(v){volume=v/100;document.getElementById('v').textContent=v;Object.values(sounds).forEach(a=>a.volume=volume)}
+</script>
+</body>
+</html>

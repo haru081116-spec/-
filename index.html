@@ -1,59 +1,89 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>効果音ボード</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111">
+<title>効果音再生アプリ</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#111;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif;min-height:100vh}
-header{padding:18px 16px 10px;text-align:center}
-h1{margin:0;font-size:28px}.sub{color:#aaa;margin-top:5px;font-size:13px}
-.board{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:14px;max-width:700px;margin:auto}
-button{border:0;border-radius:18px;min-height:125px;background:#242424;color:white;font-size:23px;font-weight:700;box-shadow:0 5px 0 #050505;touch-action:manipulation}
-button:active{transform:translateY(4px);box-shadow:0 1px 0 #050505}
-.emoji{display:block;font-size:45px;margin-bottom:8px}.small{font-size:13px;color:#aaa;display:block;margin-top:5px;font-weight:500}
-.controls{max-width:700px;margin:0 auto;padding:0 14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stop{background:#8b1e1e}.vol{background:#242424;min-height:70px;font-size:16px}
-input{width:100%;accent-color:#fff}
-#status{text-align:center;color:#bbb;font-size:13px;min-height:20px;padding:0 10px 12px}
-@media(min-width:600px){.board{grid-template-columns:repeat(4,1fr)}button{min-height:145px}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;background:#111;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;user-select:none}
+header{text-align:center;padding:18px 14px 8px}
+h1{margin:0;font-size:28px}.subtitle{margin-top:5px;color:#aaa;font-size:13px}
+#status{min-height:22px;text-align:center;color:#bbb;font-size:13px;padding:4px 12px 10px}
+.board{width:min(760px,100%);margin:auto;padding:8px 14px 14px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sound-button{min-height:125px;border:0;border-radius:18px;background:#282828;color:#fff;font-size:21px;font-weight:700;box-shadow:0 5px 0 #050505;cursor:pointer;touch-action:manipulation}
+.sound-button:active{transform:translateY(4px);box-shadow:0 1px 0 #050505}
+.emoji{display:block;font-size:43px;margin-bottom:7px}.note{display:block;margin-top:5px;color:#aaa;font-size:12px;font-weight:500}
+.controls{width:min(760px,100%);margin:auto;padding:0 14px 24px;display:grid;gap:12px}
+.stop-button{width:100%;min-height:68px;border:0;border-radius:16px;background:#8c2020;color:#fff;font-size:20px;font-weight:700;box-shadow:0 4px 0 #400b0b;touch-action:manipulation}
+.stop-button:active{transform:translateY(3px);box-shadow:0 1px 0 #400b0b}
+.volume-panel{background:#242424;border-radius:16px;padding:14px 16px 16px}
+.volume-title{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:700;margin-bottom:10px}
+#volumeValue{min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
+.volume-row{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:10px}
+.volume-button{height:44px;border:0;border-radius:12px;background:#3a3a3a;color:#fff;font-size:25px;font-weight:700;touch-action:manipulation}
+#volume{width:100%;height:44px;margin:0;cursor:pointer;accent-color:#fff}
+.hint{text-align:center;color:#777;font-size:11px;margin-top:8px}
+@media(min-width:600px){.board{grid-template-columns:repeat(4,1fr)}.sound-button{min-height:145px}}
 </style>
 </head>
 <body>
-<header><h1>🎬 効果音ボード</h1><div class="sub">タップしてすぐ再生</div></header>
+<header><h1>🎬 効果音再生アプリ</h1><div class="subtitle">タップしてすぐ再生</div></header>
 <div id="status">準備完了</div>
 <main class="board">
-<button onclick="play('tiger')"><span class="emoji">🐯</span>虎の鳴き声<span class="small">ライオン音</span></button>
-<button onclick="play('magic')"><span class="emoji">✨</span>魔法</button>
-<button onclick="play('picon')"><span class="emoji">🔔</span>ピコン！</button>
-<button onclick="play('shock')"><span class="emoji">😱</span>ガーン！</button>
-<button onclick="play('phone')"><span class="emoji">📱</span>スマホ通知<span class="small">バイブレーション</span></button>
-<button onclick="play('siren')"><span class="emoji">🚨</span>警報</button>
-<button onclick="play('police')"><span class="emoji">🚓</span>警察サイレン</button>
+<button class="sound-button" data-sound="tiger"><span class="emoji">🐯</span>虎の鳴き声<span class="note">ライオン音</span></button>
+<button class="sound-button" data-sound="magic"><span class="emoji">✨</span>魔法</button>
+<button class="sound-button" data-sound="picon"><span class="emoji">🔔</span>ピコン！</button>
+<button class="sound-button" data-sound="shock"><span class="emoji">😱</span>ガーン！</button>
+<button class="sound-button" data-sound="phone"><span class="emoji">📱</span>スマホ通知<span class="note">バイブレーション</span></button>
+<button class="sound-button" data-sound="siren"><span class="emoji">🚨</span>警報</button>
+<button class="sound-button" data-sound="police"><span class="emoji">🚓</span>警察サイレン</button>
+<button class="sound-button" data-sound="car"><span class="emoji">🚗</span>車の通過</button>
 </main>
-<div class="controls">
-<button class="stop" onclick="stopAll()">⏹️ 全停止</button>
-<div class="vol"><label>🔊 音量 <span id="v">100</span>%</label><input id="volume" type="range" min="0" max="100" value="100" oninput="setVolume(this.value)"></div>
+<section class="controls">
+<button class="stop-button" id="stopButton">⏹️ 全停止</button>
+<div class="volume-panel">
+<div class="volume-title"><span>🔊 音量</span><span id="volumeValue">100%</span></div>
+<div class="volume-row">
+<button class="volume-button" id="volumeDown" aria-label="音量を下げる">−</button>
+<input id="volume" type="range" min="0" max="100" value="100" step="1" aria-label="音量">
+<button class="volume-button" id="volumeUp" aria-label="音量を上げる">＋</button>
 </div>
+<div class="hint">スライダーまたは「−」「＋」で音量を変更できます</div>
+</div>
+</section>
 <script>
-const names={
- tiger:'tiger.mp3',magic:'magic.mp3',picon:'picon.mp3',
- shock:'shock.mp3',phone:'phone.mp3',siren:'siren.mp3',
- police:'police.mp3'
-};
+"use strict";
+const soundFiles={tiger:"tiger.mp3",magic:"magic.mp3",picon:"picon.mp3",shock:"shock.mp3",phone:"phone.mp3",siren:"siren.mp3",police:"police.mp3",car:"car.mp3"};
+const soundNames={tiger:"虎の鳴き声",magic:"魔法",picon:"ピコン！",shock:"ガーン！",phone:"スマホ通知",siren:"警報",police:"警察サイレン",car:"車の通過"};
 const sounds={};
-for(const [k,u] of Object.entries(names)){const a=new Audio(u);a.preload='auto';sounds[k]=a}
 let volume=1;
-function play(k){
-  const a=sounds[k];
-  if(!a)return;
-  a.currentTime=0;a.volume=volume;
-  a.play().catch(()=>{});
-  document.getElementById('status').textContent='▶ '+document.querySelector(`button[onclick="play('${k}')"]`).innerText.split('\n')[0];
+for(const [key,file] of Object.entries(soundFiles)){const a=new Audio(file);a.preload="auto";a.volume=volume;sounds[key]=a}
+function setVolume(value){
+ volume=Math.max(0,Math.min(1,Number(value)/100));
+ const percent=Math.round(volume*100);
+ document.getElementById("volume").value=percent;
+ document.getElementById("volumeValue").textContent=percent+"%";
+ Object.values(sounds).forEach(a=>a.volume=volume);
 }
-function stopAll(){Object.values(sounds).forEach(a=>{a.pause();a.currentTime=0});document.getElementById('status').textContent='⏹ 停止しました'}
-function setVolume(v){volume=v/100;document.getElementById('v').textContent=v;Object.values(sounds).forEach(a=>a.volume=volume)}
+function playSound(key){
+ const a=sounds[key];if(!a)return;
+ a.pause();a.currentTime=0;a.volume=volume;
+ const p=a.play();
+ if(p!==undefined)p.catch(()=>{document.getElementById("status").textContent="音を再生できませんでした。もう一度タップしてください。"});
+ document.getElementById("status").textContent="▶ "+soundNames[key];
+}
+function stopAll(){
+ Object.values(sounds).forEach(a=>{a.pause();a.currentTime=0});
+ document.getElementById("status").textContent="⏹ 停止しました";
+}
+document.querySelectorAll(".sound-button").forEach(b=>b.addEventListener("click",()=>playSound(b.dataset.sound)));
+document.getElementById("stopButton").addEventListener("click",stopAll);
+document.getElementById("volume").addEventListener("input",e=>setVolume(e.target.value));
+document.getElementById("volumeDown").addEventListener("click",()=>setVolume(Math.max(0,Math.round(volume*100)-10)));
+document.getElementById("volumeUp").addEventListener("click",()=>setVolume(Math.min(100,Math.round(volume*100)+10)));
+setVolume(100);
 </script>
 </body>
 </html>
